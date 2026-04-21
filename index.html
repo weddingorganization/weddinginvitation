@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="hy">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Հարսանիքի հրավեր</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@300;400;500;600&family=Noto+Serif+Armenian:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-backdrop" aria-hidden="true"></div>
+
+    <a class="skip-link" id="skip-link" href="#main"></a>
+
+    <div class="invite-column">
+      <header class="site-header">
+        <a class="site-logo" id="logo-link" href="#main">
+          <img
+            class="site-logo__img"
+            id="logo-img"
+            src="ML.svg"
+            alt=""
+            width="56"
+            height="56"
+            decoding="async"
+          />
+        </a>
+        <nav class="site-nav" id="site-nav" aria-label=""></nav>
+      </header>
+
+      <main id="main">
+        <section class="hero hero--masthead" aria-labelledby="hero-title">
+          <div class="hero__masthead-inner">
+            <p class="hero__kicker" id="hero-eyebrow"></p>
+            <h1 class="hero__title" id="hero-title"></h1>
+            <br class="hero__post-title-break" aria-hidden="true" />
+            <p class="hero__subline script" id="hero-subline"></p>
+            <p class="hero__date script" id="hero-date"></p>
+            <div class="countdown" id="countdown">
+              <div class="countdown__unit">
+                <span class="countdown__value" id="cd-days">0</span>
+                <span class="countdown__label" id="cd-l-day"></span>
+              </div>
+              <div class="countdown__unit">
+                <span class="countdown__value" id="cd-hours">0</span>
+                <span class="countdown__label" id="cd-l-hour"></span>
+              </div>
+              <div class="countdown__unit">
+                <span class="countdown__value" id="cd-minutes">0</span>
+                <span class="countdown__label" id="cd-l-minute"></span>
+              </div>
+              <div class="countdown__unit">
+                <span class="countdown__value" id="cd-seconds">0</span>
+                <span class="countdown__label" id="cd-l-second"></span>
+              </div>
+            </div>
+            <p class="countdown__done hidden" id="countdown-done"></p>
+          </div>
+        </section>
+
+        <section
+          class="panel panel--cream panel--invite-summary"
+          id="welcome"
+          aria-labelledby="guest-greeting"
+        >
+          <div class="panel__inner narrow">
+            <div class="welcome__letter" id="welcome-letter">
+              <div class="welcome__epigraph">
+                <p class="welcome__guest" id="guest-greeting" aria-live="polite"></p>
+                <p class="welcome__letter-p welcome__letter-p--opening" id="welcome-invite-line"></p>
+                <p class="welcome__letter-date script" id="welcome-date-line"></p>
+              </div>
+              <div class="welcome__rule" aria-hidden="true"></div>
+              <div class="welcome__details" id="when-where">
+                <h2 class="panel__title" id="welcome-whenwhere-title"></h2>
+                <div class="cards">
+                  <article class="card reveal">
+                    <h3 class="card__title" id="welcome-church-title"></h3>
+                    <p class="card__intro" id="welcome-church-intro"></p>
+                    <p class="card__meta" id="welcome-church-time"></p>
+                  </article>
+                  <article class="card reveal">
+                    <h3 class="card__title" id="welcome-reception-title"></h3>
+                    <p class="card__intro" id="welcome-reception-intro"></p>
+                    <p class="card__meta" id="welcome-reception-time"></p>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel panel--forest reveal" id="special-day" aria-labelledby="special-day-title">
+          <div class="panel__inner narrow">
+            <h2 class="panel__title panel__title--light" id="special-day-title"></h2>
+            <form class="rsvp-form" id="rsvp-note-form" novalidate>
+              <div class="rsvp-form__field">
+                <label class="rsvp-form__label" for="rsvp-full-name" id="label-full-name"></label>
+                <input
+                  class="rsvp-form__input"
+                  type="text"
+                  id="rsvp-full-name"
+                  name="fullName"
+                  autocomplete="name"
+                  required
+                />
+              </div>
+
+              <fieldset class="rsvp-form__fieldset" id="rsvp-attendance-fieldset">
+                <label class="rsvp-form__check rsvp-form__check--yes">
+                  <input type="checkbox" id="rsvp-attend-yes" name="attendYes" />
+                  <span class="rsvp-form__check-text" id="label-attend-yes"></span>
+                  <span class="rsvp-form__check-done rsvp-form__check-done--yes" aria-hidden="true"></span>
+                </label>
+                <label class="rsvp-form__check rsvp-form__check--no">
+                  <input type="checkbox" id="rsvp-attend-no" name="attendNo" />
+                  <span class="rsvp-form__check-text" id="label-attend-no"></span>
+                  <span class="rsvp-form__check-done rsvp-form__check-done--no" aria-hidden="true"></span>
+                </label>
+              </fieldset>
+
+              <div class="rsvp-form__field">
+                <label class="rsvp-form__label" for="rsvp-guest-count" id="label-guest-count"></label>
+                <select class="rsvp-form__select" id="rsvp-guest-count" name="guestCount">
+                  <option value="0">0</option>
+                  <option value="1" selected>1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                </select>
+              </div>
+
+              <div class="rsvp-form__field">
+                <label class="rsvp-form__label" for="rsvp-comment" id="label-comment"></label>
+                <textarea class="rsvp-form__textarea" id="rsvp-comment" name="comment" rows="3"></textarea>
+              </div>
+
+              <p class="rsvp-form__success hidden" id="rsvp-form-success" role="status"></p>
+              <p class="rsvp-form__error hidden" id="rsvp-form-error" role="alert"></p>
+              <button class="rsvp-form__submit" type="submit" id="rsvp-form-submit"></button>
+            </form>
+          </div>
+        </section>
+
+        <section class="panel panel--cream section--maps" id="maps">
+          <div class="panel__inner">
+            <h2 class="panel__title" id="title-directions"></h2>
+            <div class="map-grid">
+              <div class="map-block reveal">
+                <h3 class="map-block__title" id="map-church-heading"></h3>
+                <div class="map" id="map-church" role="region">
+                  <iframe
+                    id="iframe-church"
+                    class="map__frame"
+                    title=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    allowfullscreen
+                  ></iframe>
+                </div>
+                <p class="map-block__external hidden" id="map-church-external-wrap">
+                  <a
+                    id="map-church-external"
+                    href="#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  ></a>
+                </p>
+              </div>
+              <div class="map-block reveal">
+                <h3 class="map-block__title" id="map-reception-heading"></h3>
+                <div class="map" id="map-reception" role="region">
+                  <iframe
+                    id="iframe-reception"
+                    class="map__frame"
+                    title=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    allowfullscreen
+                  ></iframe>
+                </div>
+                <p class="map-block__external hidden" id="map-reception-external-wrap">
+                  <a
+                    id="map-reception-external"
+                    href="#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  ></a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel panel--cream section--closing">
+          <div class="panel__inner narrow">
+            <p class="closing reveal script" id="closing-line"></p>
+          </div>
+        </section>
+
+        <section class="rsvp-split reveal" aria-labelledby="footer-questions">
+          <div class="rsvp-split__left">
+            <h2 class="rsvp-split__title" id="footer-questions"></h2>
+            <p class="rsvp-split__text" id="rsvp-intro"></p>
+            <p class="rsvp-split__email hidden" id="rsvp-email-wrap">
+              <a id="rsvp-email-link" href=""></a>
+            </p>
+            <ul class="contact-list contact-list--rsvp" id="contact-list"></ul>
+          </div>
+          <div class="rsvp-split__right" aria-hidden="true"></div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <p class="site-footer__note" id="footer-year"></p>
+      </footer>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
