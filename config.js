@@ -42,7 +42,7 @@ window.WEDDING_CONFIG = {
   },
   closingLine: "Սիրով սպասում ենք։",
   rsvpIntro: "Հաստատման համար զանգահարեք կամ գրեք։",
-  rsvpEmail: "mejunts.tayevik@gmail.com",
+  rsvpEmail: "l522arch@gmail.com",
   contact: [
     { label: "Մերուժան", phone: "+374 91 613 919" },
     { label: "Լուիզա", phone: "+374 94 311 309" },
