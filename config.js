@@ -3,7 +3,7 @@ window.WEDDING_CONFIG = {
   googleMapsApiKey: "",
   pageTitle: "Հարսանիքի հրավեր",
   backgroundImage: "IMG_0423.PNG",
-  coupleLine: "Մերուժան\u00A0ԵՎ\u00A0Լուիզա",
+  coupleLine: "ՄԵՐՈՒԺԱՆ\u00A0ԵՎ\u00A0ԼՈՒԻԶԱ",
   tagline: "",
   heroSubline: "Հարսանյաց հրավեր",
   weddingDateISO: "2026-06-19T14:30:00",
