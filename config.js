@@ -3,7 +3,7 @@ window.WEDDING_CONFIG = {
   googleMapsApiKey: "",
   pageTitle: "Հարսանիքի հրավեր",
   backgroundImage: "IMG_0423.PNG",
-  coupleLine: "Մերուժան և Լուիզա",
+  coupleLine: "Մերուժան\u00A0ԵՎ\u00A0Լուիզա",
   tagline: "",
   heroSubline: "Հարսանյաց հրավեր",
   weddingDateISO: "2026-06-19T14:30:00",
@@ -12,6 +12,18 @@ window.WEDDING_CONFIG = {
     "Սիրով հրավիրում ենք կիսելու մեր կյանքի ամենակարևոր և հիշարժան օրը։",
   defaultGuestGreeting: "Հարգելի հյուր,",
   guestGreetingTemplate: "Հարգելի {name},",
+  // Guest table: ?g=<id> (or ?guest= / ?guest_id=). Sheet columns: id | name | note (optional).
+  // guestListJsonUrl: HTTPS URL returning JSON { "slug": "Անուն Ազգանուն" } or { "slug": { "name": "...", "note": "..." } }.
+  //   Recommended: Google Apps Script "Deploy" > Web app > Execute as you > Who has access: Anyone, doGet returns ContentService JSON from your Sheet.
+  // guestListCsvUrl: published CSV, e.g. https://docs.google.com/spreadsheets/d/SHEET_ID/export?format=csv&gid=0 (sheet must be viewable by link).
+  // If both URLs are empty, only guestListFallbackPath is loaded.
+  guestListJsonUrl: "",
+  guestListCsvUrl:
+    "https://docs.google.com/spreadsheets/d/1pHce59ErYh72UIm15NJNauCRG1zqK6OmSFkC77I1bWY/export?format=csv&gid=0",
+  // If the site cannot read the Sheet (CORS), set a proxy that returns the CSV body, e.g.:
+  // guestListCsvProxy: "https://api.allorigins.win/raw?url="
+  guestListCsvProxy: "",
+  guestListFallbackPath: "data/guests.json",
   church: {
     title: "Պսակադրություն",
     intro: "Սուրբ Մարիամ Աստվածածին եկեղեցի",
@@ -43,6 +55,12 @@ window.WEDDING_CONFIG = {
   closingLine: "Սիրով սպասում ենք։",
   rsvpIntro: "Հաստատման համար զանգահարեք կամ գրեք։",
   rsvpEmail: "l522arch@gmail.com",
+  // BigQuery logger: paste the HTTPS URL from `gcloud functions deploy` (Cloud Run URL). If empty, no rows are sent.
+  // POST JSON: secret + name_surname, yes_no, guest_number, comment (table weddinginv-494020.guests.guests)
+  rsvpSheetLogUrl:
+    "https://europe-west1-weddinginv-494020.cloudfunctions.net/rsvpInsert",
+  rsvpSheetLogSecret:
+    "6d764cb4e6f383affb2344929cf33e3cb6117c8c64f53925624bba77b3d5a570",
   contact: [
     { label: "Մերուժան", phone: "+374 91 613 919" },
     { label: "Լուիզա", phone: "+374 94 311 309" },
@@ -81,8 +99,39 @@ window.WEDDING_CONFIG = {
     rsvpSuccess: "Հաստատումը ուղարկված է։ Շնորհակալություն։",
     rsvpSendError:
       "Չհաջողվեց ուղարկել։ Խնդրում ենք կրկին փորձել կամ զանգահարել մեզ։",
+    rsvpFormSubmitActivate:
+      "Ձևը FormSubmit-ում դեռ ակտիվ չէ։ Բացեք նույն էլ. հասցեով (rsvpEmail) եկած նամակը, սեղմեք Activate Form, հետո նորից ուղարկեք։ Ստուգեք նաև Spam։",
     rsvpLocalFile:
       "Ձևը չի աշխատում, երբ էջը բացված է ֆայլից (file://)։ Բացեք կայքը HTTP սերվերի վրա (օր․ GitHub Pages, Netlify, կամ տեղում՝ npx serve)։",
     rsvpAttendanceAria: "Մասնակցություն",
   },
 };
+
+/*
+  BigQuery: weddinginv-494020.guests.guests
+  Columns: name_surname, yes_no, guest_number, comment — all STRING NULLABLE
+
+  Site POSTs JSON: { secret, name_surname, yes_no, guest_number, comment }
+  Implement a Cloud Function (or Apps Script + BigQuery API) that checks secret, then inserts one row.
+
+  Optional — mirror the same row to a Sheet tab with headers:
+  name_surname | yes_no | guest_number | comment
+
+  function doPost(e) {
+    var SPREADSHEET_ID = "1pHce59ErYh72UIm15NJNauCRG1zqK6OmSFkC77I1bWY";
+    var TAB = "RSVP_Log";
+    var SECRET = "replace-with-long-random-string";
+    var body = JSON.parse(e.postData.contents);
+    if (body.secret !== SECRET) {
+      return ContentService.createTextOutput("denied");
+    }
+    var sh = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(TAB);
+    sh.appendRow([
+      body.name_surname || "",
+      body.yes_no || "",
+      body.guest_number,
+      body.comment || "",
+    ]);
+    return ContentService.createTextOutput("ok");
+  }
+*/

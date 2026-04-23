@@ -37,7 +37,13 @@
 
   function guestParam() {
     const p = new URLSearchParams(window.location.search);
-    return p.get("g") || p.get("guest") || p.get("guest_id");
+    const raw = p.get("g") || p.get("guest") || p.get("guest_id");
+    if (raw == null || raw === "") return null;
+    try {
+      return decodeURIComponent(raw).trim();
+    } catch {
+      return String(raw).trim();
+    }
   }
 
   function greetingForGuest(name) {
@@ -47,14 +53,209 @@
     return template.replace("{name}", name);
   }
 
-  async function loadGuestMap() {
-    try {
-      const res = await fetch("data/guests.json", { cache: "no-store" });
-      if (!res.ok) throw new Error("guest list unavailable");
-      return await res.json();
-    } catch {
+  function displayNameFromGuestEntry(entry) {
+    if (entry == null) return null;
+    if (typeof entry === "string") {
+      const t = entry.trim();
+      return t || null;
+    }
+    if (typeof entry === "object") {
+      const n =
+        entry.name ||
+        entry.displayName ||
+        entry.display ||
+        entry.fullName ||
+        "";
+      const t = String(n).trim();
+      return t || null;
+    }
+    return null;
+  }
+
+  function parseCsvToMatrix(text) {
+    const rows = [];
+    let row = [];
+    let field = "";
+    let inQuotes = false;
+    const s = String(text).replace(/^\uFEFF/, "");
+    for (let i = 0; i < s.length; i++) {
+      const c = s[i];
+      if (inQuotes) {
+        if (c === '"') {
+          if (s[i + 1] === '"') {
+            field += '"';
+            i++;
+            continue;
+          }
+          inQuotes = false;
+          continue;
+        }
+        field += c;
+        continue;
+      }
+      if (c === '"') {
+        inQuotes = true;
+        continue;
+      }
+      if (c === ",") {
+        row.push(field);
+        field = "";
+        continue;
+      }
+      if (c === "\n" || c === "\r") {
+        if (c === "\r" && s[i + 1] === "\n") i++;
+        row.push(field);
+        rows.push(row);
+        row = [];
+        field = "";
+        continue;
+      }
+      field += c;
+    }
+    row.push(field);
+    if (row.some((cell) => String(cell).length)) rows.push(row);
+    return rows;
+  }
+
+  function guestsMapFromCsvText(text) {
+    const matrix = parseCsvToMatrix(text);
+    if (!matrix.length) return null;
+    const headers = matrix[0].map((h) =>
+      String(h || "")
+        .trim()
+        .toLowerCase()
+    );
+    const idIdx = headers.findIndex((h) =>
+      [
+        "id",
+        "guest_id",
+        "slug",
+        "key",
+        "code",
+        "կոդ",
+        "ծածկանուն",
+      ].includes(h)
+    );
+    const nameIdx = headers.findIndex((h) =>
+      [
+        "name",
+        "display_name",
+        "displayname",
+        "full_name",
+        "fullname",
+        "guest",
+        "անուն",
+      ].includes(h)
+    );
+    let headerRow = 1;
+    let useId = idIdx;
+    let useName = nameIdx;
+    if (idIdx < 0 || nameIdx < 0) {
+      if (matrix[0].length < 2) return null;
+      useId = 0;
+      useName = 1;
+      headerRow = 0;
+    } else if (matrix.length < 2) {
       return null;
     }
+    const noteIdx =
+      headerRow === 1
+        ? headers.findIndex((h) =>
+            ["note", "notes", "info", "comment", "նշում"].includes(h)
+          )
+        : -1;
+    const out = {};
+    for (let r = headerRow; r < matrix.length; r++) {
+      const cells = matrix[r];
+      const id = String(cells[useId] ?? "").trim();
+      if (!id) continue;
+      const name = String(cells[useName] ?? "").trim();
+      const noteRaw =
+        noteIdx >= 0 ? String(cells[noteIdx] ?? "").trim() : "";
+      if (noteRaw) {
+        out[id] = { name, note: noteRaw };
+      } else if (name) {
+        out[id] = name;
+      }
+    }
+    return Object.keys(out).length ? out : null;
+  }
+
+  async function loadGuestMap() {
+    const jsonUrl = String(cfg.guestListJsonUrl || "").trim();
+    const csvUrl = String(cfg.guestListCsvUrl || "").trim();
+    const fallback = String(
+      cfg.guestListFallbackPath || "data/guests.json"
+    ).trim();
+
+    const fetchJsonObject = async (url) => {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) return null;
+      const data = await res.json();
+      if (!data || typeof data !== "object" || Array.isArray(data)) return null;
+      return data;
+    };
+
+    const looksLikeHtml = (t) =>
+      /^\s*</.test(t) || /<!doctype\s+html/i.test(t);
+
+    const fetchCsvMap = async (url) => {
+      const tryParse = (text) => {
+        if (!text || looksLikeHtml(text)) return null;
+        let m = guestsMapFromCsvText(text);
+        if (m) return m;
+        if (text.includes(";") && !text.includes(",")) {
+          const alt = text.split(/\r?\n/).map((line) => line.split(";"));
+          if (alt.length >= 2) {
+            m = guestsMapFromCsvText(
+              alt.map((row) => row.join(",")).join("\n")
+            );
+          }
+        }
+        return m;
+      };
+
+      const proxyTpl = String(cfg.guestListCsvProxy || "").trim();
+      const urlsToTry = [url];
+      if (proxyTpl) {
+        urlsToTry.push(
+          proxyTpl.includes("{url}")
+            ? proxyTpl.replace("{url}", encodeURIComponent(url))
+            : proxyTpl + encodeURIComponent(url)
+        );
+      }
+
+      for (const u of urlsToTry) {
+        try {
+          const res = await fetch(u, { cache: "no-store" });
+          if (!res.ok) continue;
+          const text = await res.text();
+          const m = tryParse(text);
+          if (m) return m;
+        } catch {
+          /* next */
+        }
+      }
+      return null;
+    };
+
+    try {
+      if (jsonUrl) {
+        const m = await fetchJsonObject(jsonUrl);
+        if (m && Object.keys(m).length > 0) return m;
+      }
+      if (csvUrl) {
+        const m = await fetchCsvMap(csvUrl);
+        if (m && Object.keys(m).length > 0) return m;
+      }
+      if (fallback) {
+        const m = await fetchJsonObject(fallback);
+        if (m) return m;
+      }
+    } catch {
+      /* ignore */
+    }
+    return null;
   }
 
   async function resolveGuestGreeting() {
@@ -62,10 +263,9 @@
     if (!el) return;
 
     const param = guestParam();
-    if (!param) {
-      el.textContent = greetingForGuest(null);
-      return;
-    }
+    el.textContent = greetingForGuest(null);
+
+    if (!param) return;
 
     const map = await loadGuestMap();
     if (!map) {
@@ -74,7 +274,8 @@
     }
 
     const key = Object.prototype.hasOwnProperty.call(map, param) ? param : null;
-    const displayName = key ? map[key] : null;
+    const rawEntry = key ? map[key] : null;
+    const displayName = displayNameFromGuestEntry(rawEntry);
     el.textContent = greetingForGuest(displayName);
   }
 
@@ -160,9 +361,11 @@
     if (parts.length !== 2) {
       return escapeHtml(raw);
     }
-    return `${escapeHtml(parts[0].trim())}<br /><span class="hero__and">և</span><br />${escapeHtml(
+    return `<span class="hero__couple-part">${escapeHtml(
+      parts[0].trim()
+    )}</span><span class="hero__couple-joiner">և</span><span class="hero__couple-part">${escapeHtml(
       parts[1].trim()
-    )}`;
+    )}</span>`;
   }
 
   function applyContent() {
@@ -266,9 +469,11 @@
       const li = document.createElement("li");
       const phone = (c.phone || "").replace(/\s+/g, "");
       const tel = phone ? `tel:${phone}` : "#";
-      li.innerHTML = `${escapeHtml(c.label)}: <a href="${tel}">${escapeHtml(
+      li.innerHTML = `<span class="contact-list__label">${escapeHtml(
+        c.label
+      )}</span><span class="contact-list__phone"><a href="${tel}">${escapeHtml(
         c.phone || ""
-      )}</a>`;
+      )}</a></span>`;
       contact.appendChild(li);
     });
 
@@ -444,10 +649,33 @@
     if (api && /html files|web server|file:\/\//i.test(api)) {
       return str.rsvpLocalFile || api;
     }
+    if (api && /activation|activate form|needs activation/i.test(api)) {
+      return str.rsvpFormSubmitActivate || api;
+    }
     if (api) {
       return [str.rsvpSendError || "", api].filter(Boolean).join(" ");
     }
     return str.rsvpSendError || "";
+  }
+
+  function appendRsvpSheetLog(row) {
+    const logUrl = String(cfg.rsvpSheetLogUrl || "").trim();
+    if (!logUrl) return;
+    const secret = String(cfg.rsvpSheetLogSecret || "").trim();
+    const payload = {
+      secret,
+      name_surname: row.name,
+      yes_no: row.attendYes ? "yes" : "no",
+      guest_number: String(row.guestCount ?? "0").trim() || "0",
+      comment: row.comment || "",
+    };
+    const body = JSON.stringify(payload);
+    fetch(logUrl, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body,
+    }).catch(() => {});
   }
 
   function initRsvpNoteForm() {
@@ -552,6 +780,12 @@
               (typeof data.message === "string" &&
                 data.message.toLowerCase().includes("success")));
           if (ok) {
+            appendRsvpSheetLog({
+              name,
+              attendYes,
+              guestCount,
+              comment,
+            });
             showRsvpFormSuccess();
             form.reset();
             const gs = qs("rsvp-guest-count");
