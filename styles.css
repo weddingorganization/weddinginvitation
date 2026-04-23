@@ -1,28 +1,4 @@
 @font-face {
-  font-family: "Vrdznagir";
-  src: url("fonts/Vrdznagir.otf") format("opentype");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Kotayk";
-  src: url("fonts/Kotayk-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Kotayk";
-  src: url("fonts/Kotayk-Italic.ttf") format("truetype");
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
   font-family: "GAA Gayane";
   src: url("fonts/GAA_Gayane_Reg.otf") format("opentype");
   font-weight: 400;
@@ -31,7 +7,7 @@
 }
 
 :root {
-  --invite-bg-image: url("hills.jpeg");
+  --invite-bg-image: url("IMG_0423.PNG");
   --cream: #f4efea;
   --cream-deep: #ebe4db;
   --ink: #1a1816;
@@ -42,12 +18,7 @@
   --line: rgba(26, 24, 22, 0.12);
   --line-strong: rgba(26, 24, 22, 0.22);
   --radius: 2px;
-  --font-hero-names: "Kotayk", "Noto Serif Armenian", "Mshtakan", "Sylfaen",
-    serif;
-  --font-vrdznagir: "Vrdznagir", "Noto Serif Armenian", "Mshtakan", "Sylfaen",
-    serif;
   --font-display: "Noto Serif Armenian", "Mshtakan", "Sylfaen", serif;
-  --font-body: "Noto Sans Armenian", system-ui, sans-serif;
   --font-gayane: "GAA Gayane", "Noto Sans Armenian", system-ui, sans-serif;
   --column-max: 32rem;
   --space-panel: clamp(2.25rem, 6vw, 3.75rem);
@@ -75,11 +46,11 @@ html {
 
 body {
   margin: 0;
-  font-family: var(--font-body);
+  font-family: var(--font-gayane);
   font-size: 1rem;
   line-height: 1.65;
   color: var(--ink);
-  background: var(--forest-deep);
+  background: #e8ece4;
 }
 
 .page-backdrop {
@@ -89,7 +60,7 @@ body {
   background-image: var(--invite-bg-image);
   background-size: cover;
   background-position: center;
-  filter: grayscale(0.4) saturate(0.72) brightness(0.9);
+  filter: saturate(1.02);
 }
 
 .page-backdrop::after {
@@ -98,8 +69,8 @@ body {
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(58, 72, 52, 0.38) 0%,
-    rgba(32, 38, 30, 0.55) 100%
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(232, 236, 228, 0.22) 100%
   );
   pointer-events: none;
 }
@@ -148,7 +119,7 @@ a:hover {
   isolation: isolate;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 1rem;
   padding: 0.75rem 1.15rem;
   background: color-mix(in srgb, var(--cream) 94%, transparent);
@@ -156,22 +127,10 @@ a:hover {
   border-bottom: 1px solid var(--line);
 }
 
-.site-logo:focus-visible {
-  outline: 2px solid var(--forest);
-  outline-offset: 3px;
-  border-radius: 2px;
-}
-
-.site-logo__img {
-  display: block;
-  height: clamp(2rem, 4.5vw, 2.5rem);
-  width: auto;
-  filter: brightness(0.25);
-}
-
 .site-nav {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 0.35rem 1rem;
   font-size: 0.68rem;
   font-weight: 600;
@@ -198,22 +157,8 @@ a:hover {
 .hero--masthead {
   position: relative;
   text-align: center;
-  color: #f8f6f2;
-  background-image: var(--invite-bg-image);
-  background-size: cover;
-  background-position: center 35%;
-}
-
-.hero--masthead::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(28, 34, 26, 0.5) 0%,
-    rgba(22, 26, 20, 0.62) 100%
-  );
-  pointer-events: none;
+  color: var(--ink);
+  background: transparent;
 }
 
 .hero__masthead-inner {
@@ -223,65 +168,55 @@ a:hover {
 }
 
 .hero__kicker {
-  font-family: var(--font-body);
+  font-family: var(--font-gayane);
   font-size: 0.68rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   margin: 0 0 1rem;
+  color: var(--ink-soft);
   opacity: 0.92;
 }
 
+.hero__kicker:not(.hidden) + .hero__monogram-wrap {
+  margin-top: 0.25rem;
+}
+
+.hero__monogram-wrap {
+  margin: 0 auto 1.35rem;
+  max-width: min(14rem, 72vw);
+}
+
+.hero__monogram {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
 .hero__title {
-  font-family: var(--font-hero-names);
-  font-size: clamp(1.85rem, 6.5vw, 2.65rem);
+  font-family: var(--font-gayane);
+  font-size: clamp(1.58rem, 5.4vw, 2.28rem);
   font-weight: 400;
   font-synthesis: none;
   line-height: 1.12;
-  margin: 0;
+  margin: clamp(1.35rem, 4vw, 2rem) 0 0;
   padding: 0;
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
+  text-shadow: none;
 }
 
 .hero__title .hero__and {
-  font-family: var(--font-hero-names);
-  font-style: italic;
+  font-family: var(--font-gayane);
+  font-style: normal;
   font-weight: 400;
   font-size: 0.52em;
   letter-spacing: 0.12em;
   opacity: 0.95;
 }
 
-.hero__post-title-break {
-  display: block;
-  margin: 0.65rem 0 0;
-  line-height: 1;
-}
-
-.hero__subline {
-  margin: 0 0 1.75rem;
-  padding: 0;
-  font-size: clamp(1rem, 3vw, 1.2rem);
-  opacity: 0.96;
-}
-
-.hero__date {
-  margin: 0 0 1.75rem;
-  padding: 0;
-  font-size: clamp(1rem, 3vw, 1.2rem);
-  opacity: 0.96;
-}
-
 .script {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 400;
-}
-
-.hero__subline.script,
-.hero__date.script {
-  font-family: var(--font-vrdznagir);
+  font-family: var(--font-gayane);
   font-style: normal;
-  font-synthesis: none;
+  font-weight: 400;
 }
 
 .countdown {
@@ -293,8 +228,8 @@ a:hover {
 }
 
 .countdown__unit {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--line-strong);
   padding: 0.55rem 0.35rem;
   text-align: center;
 }
@@ -315,9 +250,9 @@ a:hover {
 }
 
 .countdown__done {
-  font-family: var(--font-display);
+  font-family: var(--font-gayane);
   font-size: 1.2rem;
-  font-style: italic;
+  font-style: normal;
   margin: 1.25rem 0 0;
 }
 
@@ -366,7 +301,7 @@ a:hover {
 }
 
 .panel__title {
-  font-family: var(--font-display);
+  font-family: var(--font-gayane);
   font-size: clamp(1.35rem, 4vw, 1.75rem);
   font-weight: 700;
   text-align: center;
@@ -383,7 +318,7 @@ a:hover {
 }
 
 #special-day-title {
-  font-family: var(--font-vrdznagir);
+  font-family: var(--font-gayane);
   font-weight: 400;
   font-synthesis: none;
 }
@@ -408,7 +343,7 @@ a:hover {
 }
 
 #rsvp-intro {
-  font-family: var(--font-vrdznagir);
+  font-family: var(--font-gayane);
   font-weight: 400;
   font-synthesis: none;
 }
@@ -421,14 +356,14 @@ a:hover {
   font-size: clamp(1.1rem, 3vw, 1.35rem);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  font-family: var(--font-display);
+  font-family: var(--font-gayane);
   border-bottom: 2px solid var(--ink);
   padding-bottom: 0.65rem;
   margin-bottom: 1.75rem;
 }
 
 .panel__lede {
-  font-family: var(--font-display);
+  font-family: var(--font-gayane);
   font-size: 1.02rem;
   line-height: 1.55;
   text-align: center;
@@ -437,7 +372,7 @@ a:hover {
 }
 
 .panel__body--light {
-  font-family: var(--font-display);
+  font-family: var(--font-gayane);
   font-size: 1.02rem;
   line-height: 1.65;
   text-align: center;
@@ -457,7 +392,7 @@ a:hover {
 
 .rsvp-form__label {
   display: block;
-  font-family: var(--font-vrdznagir);
+  font-family: var(--font-gayane);
   font-size: 0.82rem;
   font-weight: 400;
   font-synthesis: none;
@@ -469,7 +404,7 @@ a:hover {
 .rsvp-form__select,
 .rsvp-form__textarea {
   width: 100%;
-  font-family: var(--font-vrdznagir);
+  font-family: var(--font-gayane);
   font-weight: 400;
   font-synthesis: none;
   font-size: 0.95rem;
@@ -507,7 +442,7 @@ a:hover {
   display: flex;
   align-items: flex-start;
   gap: 0.55rem;
-  font-family: var(--font-vrdznagir);
+  font-family: var(--font-gayane);
   font-size: 0.88rem;
   font-weight: 400;
   font-synthesis: none;
@@ -559,7 +494,7 @@ a:hover {
   width: 100%;
   margin-top: 0.35rem;
   padding: 0.7rem 1rem;
-  font-family: var(--font-display);
+  font-family: var(--font-gayane);
   font-size: 0.68rem;
   font-weight: 400;
   font-synthesis: none;
@@ -577,7 +512,7 @@ a:hover {
 }
 
 .rsvp-form__success {
-  font-family: var(--font-vrdznagir);
+  font-family: var(--font-gayane);
   font-weight: 400;
   font-synthesis: none;
   font-size: 0.88rem;
@@ -587,7 +522,7 @@ a:hover {
 }
 
 .rsvp-form__error {
-  font-family: var(--font-vrdznagir);
+  font-family: var(--font-gayane);
   font-weight: 400;
   font-synthesis: none;
   font-size: 0.82rem;
@@ -629,7 +564,7 @@ a:hover {
 
 .welcome__letter-p--opening {
   margin: 0 0 0.55rem;
-  font-family: var(--font-vrdznagir);
+  font-family: var(--font-gayane);
   font-size: clamp(1rem, 2.9vw, 1.08rem);
   line-height: 1.68;
   letter-spacing: 0.015em;
@@ -649,14 +584,14 @@ a:hover {
 }
 
 #welcome-invite-line {
-  font-family: var(--font-vrdznagir);
+  font-family: var(--font-gayane);
   font-style: normal;
   font-weight: 400;
   font-synthesis: none;
 }
 
 #welcome-date-line {
-  font-family: var(--font-vrdznagir);
+  font-family: var(--font-gayane);
   font-style: normal;
   font-weight: 400;
   font-synthesis: none;
@@ -664,7 +599,7 @@ a:hover {
 
 .welcome__letter-date {
   margin: 0;
-  font-family: var(--font-vrdznagir);
+  font-family: var(--font-gayane);
   font-size: clamp(1.06rem, 3vw, 1.28rem);
   font-style: normal;
   font-weight: 400;
@@ -696,7 +631,7 @@ a:hover {
 }
 
 .card__title {
-  font-family: var(--font-body);
+  font-family: var(--font-gayane);
   font-size: 0.65rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -705,7 +640,7 @@ a:hover {
 }
 
 .card__intro {
-  font-family: var(--font-vrdznagir);
+  font-family: var(--font-gayane);
   font-size: 0.98rem;
   font-weight: 400;
   font-synthesis: none;
@@ -715,7 +650,7 @@ a:hover {
 
 .card__meta {
   margin: 0 0 0.5rem;
-  font-family: var(--font-vrdznagir);
+  font-family: var(--font-gayane);
   font-size: 0.88rem;
   font-weight: 400;
   font-synthesis: none;
@@ -723,7 +658,8 @@ a:hover {
 }
 
 .card__address {
-  font-family: var(--font-display);
+  margin: 0.35rem 0 0;
+  font-family: var(--font-gayane);
   font-style: normal;
   font-size: 0.88rem;
   color: var(--ink-soft);
@@ -741,7 +677,7 @@ a:hover {
 }
 
 .map-block__title {
-  font-family: var(--font-vrdznagir);
+  font-family: var(--font-gayane);
   font-size: 1.05rem;
   font-weight: 400;
   font-synthesis: none;
@@ -752,13 +688,13 @@ a:hover {
 .map-block__external {
   margin: 0.55rem 0 0;
   font-size: 0.82rem;
-  font-family: var(--font-vrdznagir);
+  font-family: var(--font-gayane);
   font-weight: 400;
   font-synthesis: none;
 }
 
 .map-block__external a {
-  font-family: var(--font-vrdznagir);
+  font-family: var(--font-gayane);
   font-weight: 400;
   font-synthesis: none;
 }
@@ -803,7 +739,7 @@ a:hover {
 }
 
 .closing {
-  font-family: var(--font-display);
+  font-family: var(--font-gayane);
   text-align: center;
   font-size: 1.2rem;
   margin: 0;
@@ -824,7 +760,7 @@ a:hover {
 }
 
 .rsvp-split__title {
-  font-family: var(--font-display);
+  font-family: var(--font-gayane);
   font-size: clamp(1.15rem, 3vw, 1.45rem);
   font-weight: 700;
   margin: 0 0 0.85rem;
@@ -832,7 +768,7 @@ a:hover {
 }
 
 .rsvp-split__text {
-  font-family: var(--font-body);
+  font-family: var(--font-gayane);
   font-size: 0.82rem;
   line-height: 1.6;
   margin: 0 0 0.75rem;
@@ -841,7 +777,7 @@ a:hover {
 
 .rsvp-split__email {
   margin: 0 0 1rem;
-  font-family: var(--font-body);
+  font-family: var(--font-gayane);
   font-size: 0.88rem;
 }
 
@@ -854,7 +790,7 @@ a:hover {
   list-style: none;
   padding: 0;
   margin: 0;
-  font-family: var(--font-vrdznagir);
+  font-family: var(--font-gayane);
   font-weight: 400;
   font-synthesis: none;
   font-size: 0.84rem;
@@ -879,7 +815,7 @@ a:hover {
 .site-footer {
   padding: 1.25rem 1rem 1.75rem;
   text-align: center;
-  font-family: var(--font-body);
+  font-family: var(--font-gayane);
   font-size: 0.75rem;
   color: var(--ink-soft);
   background: var(--cream);

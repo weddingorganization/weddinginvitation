@@ -19,17 +19,6 @@
 
     <div class="invite-column">
       <header class="site-header">
-        <a class="site-logo" id="logo-link" href="#main">
-          <img
-            class="site-logo__img"
-            id="logo-img"
-            src="ML.svg"
-            alt=""
-            width="56"
-            height="56"
-            decoding="async"
-          />
-        </a>
         <nav class="site-nav" id="site-nav" aria-label=""></nav>
       </header>
 
@@ -37,10 +26,16 @@
         <section class="hero hero--masthead" aria-labelledby="hero-title">
           <div class="hero__masthead-inner">
             <p class="hero__kicker" id="hero-eyebrow"></p>
-            <h1 class="hero__title" id="hero-title"></h1>
-            <br class="hero__post-title-break" aria-hidden="true" />
-            <p class="hero__subline script" id="hero-subline"></p>
-            <p class="hero__date script" id="hero-date"></p>
+            <div class="hero__monogram-wrap" aria-hidden="true">
+              <img
+                class="hero__monogram"
+                src="ML.svg"
+                alt=""
+                width="320"
+                height="320"
+                decoding="async"
+              />
+            </div>
             <div class="countdown" id="countdown">
               <div class="countdown__unit">
                 <span class="countdown__value" id="cd-days">0</span>
@@ -60,6 +55,7 @@
               </div>
             </div>
             <p class="countdown__done hidden" id="countdown-done"></p>
+            <h1 class="hero__title" id="hero-title"></h1>
           </div>
         </section>
 
@@ -83,11 +79,13 @@
                     <h3 class="card__title" id="welcome-church-title"></h3>
                     <p class="card__intro" id="welcome-church-intro"></p>
                     <p class="card__meta" id="welcome-church-time"></p>
+                    <div class="card__address" id="welcome-church-address"></div>
                   </article>
                   <article class="card reveal">
                     <h3 class="card__title" id="welcome-reception-title"></h3>
                     <p class="card__intro" id="welcome-reception-intro"></p>
                     <p class="card__meta" id="welcome-reception-time"></p>
+                    <div class="card__address" id="welcome-reception-address"></div>
                   </article>
                 </div>
               </div>

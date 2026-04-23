@@ -13,16 +13,6 @@
     return document.getElementById(id);
   }
 
-  const HY_WEEKDAYS = [
-    "Կիրակի",
-    "Երկուշաբթի",
-    "Երեքշաբթի",
-    "Չորեքշաբթի",
-    "Հինգշաբթի",
-    "Ուրբաթ",
-    "Շաբաթ",
-  ];
-
   const HY_MONTHS_GEN = [
     "հունվարի",
     "փետրվարի",
@@ -38,36 +28,11 @@
     "դեկտեմբերի",
   ];
 
-  function formatWeddingDateHy(d) {
-    const weekday = HY_WEEKDAYS[d.getDay()];
-    const day = d.getDate();
-    const month = HY_MONTHS_GEN[d.getMonth()];
-    const year = d.getFullYear();
-    return `${weekday}, ${day} ${month}, ${year} թ.`;
-  }
-
   function formatShortDateHy(d) {
     const day = d.getDate();
     const month = HY_MONTHS_GEN[d.getMonth()];
     const year = d.getFullYear();
     return `${day} ${month}, ${year} թ.`;
-  }
-
-  function formatWeddingDate(iso) {
-    const d = new Date(iso);
-    if (Number.isNaN(d.getTime())) return "";
-    const loc = String(cfg.locale || "hy-AM").toLowerCase();
-    if (loc.startsWith("hy")) {
-      return formatWeddingDateHy(d);
-    }
-    return new Intl.DateTimeFormat(cfg.locale || "hy-AM", {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-    }).format(d);
   }
 
   function guestParam() {
@@ -120,15 +85,6 @@
     }
     const skip = qs("skip-link");
     if (skip) skip.textContent = s.skipToContent || "";
-
-    const logoLink = qs("logo-link");
-    const logoImg = qs("logo-img");
-    if (logoLink) {
-      logoLink.setAttribute("aria-label", s.monogramAria || "");
-    }
-    if (logoImg) {
-      logoImg.alt = cfg.coupleLine || "";
-    }
 
     const nav = qs("site-nav");
     if (nav) {
@@ -220,17 +176,6 @@
     }
     const heroTitle = qs("hero-title");
     if (heroTitle) heroTitle.innerHTML = formatCoupleTitleHtml(cfg.coupleLine);
-    const sub = qs("hero-subline");
-    if (sub) {
-      const st = (cfg.heroSubline || "").trim();
-      sub.textContent = st;
-      sub.classList.toggle("hidden", !st);
-    }
-    const heroDateEl = qs("hero-date");
-    if (heroDateEl) {
-      const line = (cfg.heroDateLine || "").trim();
-      heroDateEl.textContent = line || formatWeddingDate(cfg.weddingDateISO);
-    }
 
     const d = new Date(cfg.weddingDateISO);
     const wDate = qs("welcome-date-line");
@@ -244,11 +189,13 @@
     const wChIntro = qs("welcome-church-intro");
     if (wChIntro) wChIntro.textContent = cfg.church.intro || "";
     setTextOrHide(qs("welcome-church-time"), cfg.church.time);
+    setAddress(qs("welcome-church-address"), cfg.church.addressLines);
 
     qs("welcome-reception-title").textContent = cfg.reception.title;
     const wRecIntro = qs("welcome-reception-intro");
     if (wRecIntro) wRecIntro.textContent = cfg.reception.intro || "";
     setTextOrHide(qs("welcome-reception-time"), cfg.reception.time);
+    setAddress(qs("welcome-reception-address"), cfg.reception.addressLines);
 
     const sf = cfg.strings || {};
     const ln = qs("label-full-name");
