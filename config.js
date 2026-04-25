@@ -2,7 +2,7 @@ window.WEDDING_CONFIG = {
   locale: "hy-AM",
   googleMapsApiKey: "",
   pageTitle: "Հարսանիքի հրավեր",
-  backgroundImage: "IMG_0423.PNG",
+  backgroundImage: "img/IMG_0423.PNG",
   coupleLine: "ՄԵՐՈՒԺԱՆ\u00A0ԵՎ\u00A0ԼՈՒԻԶԱ",
   tagline: "",
   heroSubline: "Հարսանյաց հրավեր",

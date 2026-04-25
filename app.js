@@ -425,6 +425,7 @@
     const recExt = (cfg.reception.mapsAppUrl || "").trim();
     const churchWrap = qs("map-church-external-wrap");
     const churchLink = qs("map-church-external");
+    const churchIllLink = qs("map-church-illustration-link");
     if (churchWrap && churchLink) {
       if (churchExt) {
         churchWrap.classList.remove("hidden");
@@ -434,8 +435,22 @@
         churchWrap.classList.add("hidden");
       }
     }
+    if (churchIllLink) {
+      if (churchExt) {
+        churchIllLink.href = churchExt;
+        churchIllLink.classList.remove("map__illustration-link--disabled");
+        churchIllLink.removeAttribute("aria-disabled");
+        churchIllLink.tabIndex = 0;
+      } else {
+        churchIllLink.removeAttribute("href");
+        churchIllLink.classList.add("map__illustration-link--disabled");
+        churchIllLink.setAttribute("aria-disabled", "true");
+        churchIllLink.tabIndex = -1;
+      }
+    }
     const recWrap = qs("map-reception-external-wrap");
     const recLink = qs("map-reception-external");
+    const recIllLink = qs("map-reception-illustration-link");
     if (recWrap && recLink) {
       if (recExt) {
         recWrap.classList.remove("hidden");
@@ -443,6 +458,19 @@
         recLink.textContent = s.mapOpenExternal || "";
       } else {
         recWrap.classList.add("hidden");
+      }
+    }
+    if (recIllLink) {
+      if (recExt) {
+        recIllLink.href = recExt;
+        recIllLink.classList.remove("map__illustration-link--disabled");
+        recIllLink.removeAttribute("aria-disabled");
+        recIllLink.tabIndex = 0;
+      } else {
+        recIllLink.removeAttribute("href");
+        recIllLink.classList.add("map__illustration-link--disabled");
+        recIllLink.setAttribute("aria-disabled", "true");
+        recIllLink.tabIndex = -1;
       }
     }
 
@@ -513,51 +541,18 @@
     ].join("\n\n");
   }
 
-  function googleMapsEmbedSrc(venue) {
-    const custom = (venue.googleMapsEmbedUrl || "").trim();
-    if (custom) return custom;
-
-    const key = (cfg.googleMapsApiKey || "").trim();
-    const query = (venue.mapSearchQuery || "").trim();
-    const q =
-      query ||
-      (typeof venue.lat === "number" && typeof venue.lng === "number"
-        ? `${venue.lat},${venue.lng}`
-        : venue.name || "");
-
-    if (key) {
-      const params = new URLSearchParams({
-        key,
-        q,
-        zoom: "15",
-        maptype: "roadmap",
-      });
-      const loc = cfg.locale || "";
-      if (String(loc).toLowerCase().startsWith("hy")) {
-        params.set("language", "hy");
-      }
-      return `https://www.google.com/maps/embed/v1/place?${params.toString()}`;
-    }
-
-    const ll =
-      typeof venue.lat === "number" && typeof venue.lng === "number"
-        ? `${venue.lat},${venue.lng}`
-        : q;
-    return `https://maps.google.com/maps?hl=hy&q=${encodeURIComponent(ll)}&z=15&output=embed`;
-  }
-
   function initMaps() {
     const church = cfg.church;
     const reception = cfg.reception;
-    const ic = qs("iframe-church");
-    const ir = qs("iframe-reception");
+    const ic = qs("map-church-illustration");
+    const ir = qs("map-reception-illustration");
     if (ic) {
-      ic.src = googleMapsEmbedSrc(church);
-      ic.title = church.name || "";
+      ic.src = "img/church.PNG";
+      ic.alt = church.name || "";
     }
     if (ir) {
-      ir.src = googleMapsEmbedSrc(reception);
-      ir.title = reception.name || "";
+      ir.src = "img/villa.PNG";
+      ir.alt = reception.name || "";
     }
   }
 
