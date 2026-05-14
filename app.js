@@ -716,8 +716,8 @@
         showRsvpFormError(str.rsvpErrorAttendance || "");
         return;
       }
-      const to = (cfg.rsvpEmail || "").trim();
-      if (!to) {
+      const accessKey = (cfg.rsvpAccessKey || "").trim();
+      if (!accessKey) {
         showRsvpFormError(str.rsvpErrorEmail || "");
         return;
       }
@@ -747,18 +747,18 @@
         return;
       }
 
-      const url = `https://formsubmit.co/ajax/${encodeURIComponent(to)}`;
-      fetch(url, {
+      fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
         body: JSON.stringify({
+          access_key: accessKey,
+          subject,
+          from_name: name,
           name,
           message,
-          _subject: subject,
-          _template: "table",
         }),
       })
         .then(async (r) => {
