@@ -54,6 +54,7 @@ window.WEDDING_CONFIG = {
   },
   closingLine: "Սիրով սպասում ենք։",
   rsvpIntro: "Հաստատման համար զանգահարեք կամ գրեք։",
+  rsvpEmail: "wedding.planner.arm@gmail.com",
   rsvpAccessKey: "2469c25b-da10-4eb3-807a-ab03c7394b5d",
   // BigQuery logger: paste the HTTPS URL from `gcloud functions deploy` (Cloud Run URL). If empty, no rows are sent.
   // POST JSON: secret + name_surname, yes_no, guest_number, comment (table weddinginv-494020.guests.guests)
